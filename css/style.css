@@ -1,0 +1,174 @@
+* {
+  box-sizing: border-box;
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+body{
+    background-color: #d1cecf;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh
+  
+}
+
+.container {
+  padding: 40px 65px;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  width: 1250px;
+}
+
+.main__left {
+  background-color: #ffffff;
+  padding: 30px 40px 60px;
+}
+
+.main__form {
+  position: relative;
+}
+
+.main__input {
+  width: 250px;
+  height: 30px;
+  border: none;
+  background-color: #eeedf0;
+  border-radius: 15px;
+  padding: 5px 15px;
+  font-size: 15px;
+  font-weight: 500;
+  outline: none;
+}
+
+.form__search {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  transform: translate(0, -50%);
+}
+
+.search__icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  font-size: 20px;
+  font-weight: 500;
+  align-items: center;
+}
+
+.left__weather {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 170px;
+  margin-bottom: 20px;
+}
+
+.weather__img {
+  width: 170px;
+  height: 170px;
+}
+
+.weather__text {
+  position: relative;
+}
+
+.weather__temperature {
+  font-size: 75px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.weather__description {
+  font-size: 16px;
+}
+
+.weather__degree-grey {
+  position: absolute;
+  top: 0;
+  left: 58%;
+  color: #d1cecf;
+  font-size: 40px;
+}
+
+.weather__celsium {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+
+  font-size: 50px;
+}
+
+.left__line-grey {
+  width: 200px;
+  height: 2px;
+  background-color: #eeedf0;
+  margin-bottom: 40px;
+}
+
+.left__location {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.location__data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50px;
+  font-size: 16px;
+  gap: 10px;
+}
+.data {
+  font-size: 14px;
+}
+
+.location__city {
+  font-size: 30px;
+}
+
+.main__right {
+    display: flex;
+    flex-direction: column;
+  background-color: #efefef;
+  padding: 30px 40px 80px 20px;
+}
+
+.right__text{
+    display: flex;
+    gap: 10px;
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.active{
+    font-weight: 600;
+}
+
+.right__properties{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.property{
+    width: 225px;
+    height: 135px;
+    background-color: #748CF1;
+    border-radius: 30px;
+}

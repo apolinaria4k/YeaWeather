@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YeaWeather</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="main">
+      <div class="container">
+        <div class="main__left">
+          <form id="form" action="GET" class="main__form">
+            <input
+              id="input"
+              class="main__input"
+              type="text"
+              placeholder="London"
+            />
+            <div class="form__search">
+              <img class="search__icon" src="icons/search.png" alt="" />
+            </div>
+            <!-- <input id="submit" class="main__submit" type="submit"> -->
+          </form>
+          <div class="left">
+            <div class="left__weather">
+              <img
+                class="weather__img"
+                src="icons/partlyCloudy.png"
+                alt="Иллюстрация погоды"
+              />
+              <div class="weather__text">
+                <p class="weather__temperature">
+                  31<span class="weather__degree-grey">°</span
+                  ><span class="weather__celsium">C</span>
+                </p>
+                <p class="weather__description">Mostly Cloudy</p>
+              </div>
+            </div>
+
+            <div class="left__line-grey"></div>
+
+            <div class="left__location">
+              <div class="location__data">
+                <p class="data">17 August 2026</p>
+                <p class="weekday">Friday, 12.44 PM</p>
+                <p class="isDay">Day</p>
+              </div>
+              <div class="location__city">London</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="main__right">
+          <div class="right__text">
+            <p class="today active" id="today">Today</p>
+            <p class="tomorrow" id="tomorrow">Tomorrow</p>
+          </div>
+          <div class="right__properties">
+            <div class="property">
+              <p class="property__text">Wind</p>
+              <p class="property__value">6 km/h</p>
+              <p class="property__addition">East</p>
+            </div>
+            <div class="property">
+              <p class="property__text">Humadity</p>
+              <p class="property__value">69%</p>
+            </div>
+            <div class="property">
+              <p class="property__text">Real Feel</p>
+              <p class="property__value">31°C</p>
+            </div>
+            <div class="property">
+              <p class="property__text">UV Index</p>
+              <p class="property__value">3</p>
+              <p class="property__addition">Moderate</p>
+            </div>
+            <div class="property">
+              <p class="property__text">Presure</p>
+              <p class="property__value">1000 mb</p>
+            </div>
+            <div class="property">
+              <p class="property__text">Change of rain</p>
+              <p class="property__value">70%</p>
+            </div>
+            <div class="property">
+              <p class="property__text">Visibility</p>
+              <p class="property__value">8 km</p>
+            </div>
+            <div class="property">
+              <p class="property__text">Sun</p>
+              <p class="property__addition">Rise <span>5.17 am</span></p>
+              <p class="property__addition">Set <span>5.17 am</span></p>
+            </div>
+            <div class="property">
+              <p class="property__text">Moon</p>
+              <p class="property__addition">Rise <span>5.17 am</span></p>
+              <p class="property__addition">Set <span>5.17 am</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
