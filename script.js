@@ -1,6 +1,4 @@
-const API_ID_2 = "3e1d42d8505e43d0bd7151425261808"; //weatherapi
-
-const API_ID = "a4e00d1b9339f6483796b6930f02922c"; //openweather
+const API_ID = "3e1d42d8505e43d0bd7151425261808";
 
 const inputElement = document.getElementById("input");
 const searchButtonElement = document.getElementById("search");
@@ -8,6 +6,8 @@ const weatherElement = document.getElementById("weather");
 const leftBlock = document.getElementById("leftBlock");
 const propertiesElement = document.getElementById("properties");
 const forecastElement = document.getElementById("forecast");
+const todayElement = document.getElementById("today");
+const tomorrowElement = document.getElementById("tomorrow");
 
 let store = {
   city: "Saint-Petersburg",
@@ -27,153 +27,179 @@ let store = {
   },
 };
 
-const fetchData = async () => {
-    try{
-        const response = await fetch(
-            `http://api.weatherapi.com/v1/current.json?key=${API_ID_2}&q=${store.city}`,
-        );
-        const data = await response.json();
+let city;
 
-        const {
-            current: {
-            chance_of_rain: chanceOfRain,
-            condition: { text: description },
-            feelslike_c: feelslike,
-            humidity,
-            is_day: isDay,
-            pressure_mb: pressure,
-            temp_c: temperature,
-            uv,
-            vis_km: visibility,
-            wind_kph: windSpeed,
-            },
-            location: { localtime, name },
-        } = data;
+const fetchData = async (day = todayElement) => {
+  inputElement.placeholder = localStorage.city || store.city;
+  const secondDay = day.previousElementSibling ?? day.nextElementSibling;
 
-        store = {
-            ...store,
-            city: name,
-            temperature,
-            description,
-            localtime,
-            isDay,
-            properties: {
-            feelslike: {
-                title: "Real feel",
-                value: `${Math.floor(feelslike)}°C`,
-            },
-            chanceOfRain: {
-                title: "Chance of rain",
-                value: `${chanceOfRain}%`,
-            },
+  city = localStorage.city || store.city;
 
-            humidity: {
-                title: "Humidity",
-                value: `${humidity}%`,
-            },
-            pressure: {
-                title: "Pressure",
-                value: `${pressure} mb`,
-            },
-            uv: {
-                title: "UV index",
-                value: `${uv}`,
-            },
-            visibility: {
-                title: "Visibility",
-                value: `${visibility} km`,
-            },
-            windSpeed: {
-                title: "Wind",
-                value: `${Math.floor(windSpeed)} km/h`,
-            },
-            },
-        };
+  if (!day.classList.contains("active")) {
+    day.classList.add("active");
+    secondDay.classList.remove("active");
+  }
 
-        renderComponent();
+  try {
+    if (day.classList.contains("today")) {
+      await fetchToday(city);
+      localStorage.city = store.city;
     }
-    catch(error){
-        console.log(error)
+    if (day.classList.contains("tomorrow")) {
+      await fetchTomorrow(city);
     }
-  
+
+    renderComponent();
+  } catch (error) {
+    console.log(error);
+    showError(error);
+  }
 };
 
-const fetchTomorrowData = async () => {
-    try{
-        const response = await fetch(
-            `http://api.weatherapi.com/v1/forecast.json?key=${API_ID_2}&q=${store.city}&days=2`,
-        );
+const fetchToday = async (city) => {
+  const URL_TODAY = `https://api.weatherapi.com/v1/current.json?key=${API_ID}&q=${city}`;
+  const response = await fetch(URL_TODAY);
 
-        const data = await response.json();
+  if (response.ok) {
+    const data = await response.json();
+    const {
+      current: {
+        chance_of_rain: chanceOfRain,
+        condition: { text: description },
+        feelslike_c: feelslike,
+        humidity,
+        is_day: isDay,
+        pressure_mb: pressure,
+        temp_c: temperature,
+        uv,
+        vis_km: visibility,
+        wind_kph: windSpeed,
+      },
+      location: { localtime, name },
+    } = data;
 
-        const {
-            current: { is_day: isDay, pressure_mb: pressure },
-            forecast: {
-            forecastday: {
-                1: {
-                date: localtime,
-                day: {
-                    daily_chance_of_rain: chanceOfRain,
-                    condition: { text: description },
-                    avgtemp_c: feelslike,
-                    avghumidity: humidity,
+    updateStore(
+      name,
+      temperature,
+      description,
+      localtime,
+      isDay,
+      feelslike,
+      chanceOfRain,
+      humidity,
+      pressure,
+      uv,
+      visibility,
+      windSpeed,
+    );
+  } else {
+    localStorage.city = "";
+    throw new Error("Failed to fetch weather data. Please try again.");
+  }
+};
 
-                    maxtemp_c: temperature,
-                    uv,
-                    avgvis_km: visibility,
-                    maxwind_kph: windSpeed,
-                },
-                },
-            },
-            },
-            location: { name },
-        } = data;
+const fetchTomorrow = async (city) => {
+  const URL_TOMORROW = `https://api.weatherapi.com/v1/forecast.json?key=${API_ID}&q=${city}&days=2`;
+  const response = await fetch(URL_TOMORROW);
 
-        store = {
-            ...store,
-            city: name,
-            temperature,
-            description,
-            localtime,
-            isDay,
-            properties: {
-            feelslike: {
-                title: "Real feel",
-                value: `${Math.floor(feelslike)}°C`,
-            },
-            chanceOfRain: {
-                title: "Chance of rain",
-                value: `${chanceOfRain}%`,
-            },
+  if (response.ok) {
+    const data = await response.json();
+    const {
+      current: { is_day: isDay, pressure_mb: pressure },
+      forecast: {
+        forecastday: {
+          1: {
+            date: localtime,
+            day: {
+              daily_chance_of_rain: chanceOfRain,
+              condition: { text: description },
+              avgtemp_c: feelslike,
+              avghumidity: humidity,
 
-            humidity: {
-                title: "Humidity",
-                value: `${humidity}%`,
+              maxtemp_c: temperature,
+              uv,
+              avgvis_km: visibility,
+              maxwind_kph: windSpeed,
             },
-            pressure: {
-                title: "Pressure",
-                value: `${pressure} mb`,
-            },
-            uv: {
-                title: "UV index",
-                value: `${uv}`,
-            },
-            visibility: {
-                title: "Visibility",
-                value: `${visibility} km`,
-            },
-            windSpeed: {
-                title: "Wind",
-                value: `${Math.floor(windSpeed)} km/h`,
-            },
-            },
-        };
-        renderComponent();
-    }
-    catch(error){
-        console.log(error)
-    }
-  
+          },
+        },
+      },
+      location: { name },
+    } = data;
+
+    updateStore(
+      name,
+      temperature,
+      description,
+      localtime,
+      isDay,
+      feelslike,
+      chanceOfRain,
+      humidity,
+      pressure,
+      uv,
+      visibility,
+      windSpeed,
+    );
+  } else {
+    localStorage.city = "";
+    throw new Error("Failed to fetch weather data. Please try again.");
+  }
+};
+
+const updateStore = (
+  name,
+  temperature,
+  description,
+  localtime,
+  isDay,
+  feelslike,
+  chanceOfRain,
+  humidity,
+  pressure,
+  uv,
+  visibility,
+  windSpeed,
+) => {
+  store = {
+    ...store,
+    city: name,
+    temperature,
+    description,
+    localtime,
+    isDay,
+    properties: {
+      feelslike: {
+        title: "Real feel",
+        value: `${Math.floor(feelslike)}°C`,
+      },
+      chanceOfRain: {
+        title: "Chance of rain",
+        value: `${chanceOfRain}%`,
+      },
+
+      humidity: {
+        title: "Humidity",
+        value: `${humidity}%`,
+      },
+      pressure: {
+        title: "Pressure",
+        value: `${pressure} mb`,
+      },
+      uv: {
+        title: "UV index",
+        value: `${uv}`,
+      },
+      visibility: {
+        title: "Visibility",
+        value: `${visibility} km`,
+      },
+      windSpeed: {
+        title: "Wind",
+        value: `${Math.floor(windSpeed)} km/h`,
+      },
+    },
+  };
 };
 
 const getImage = (description) => {
@@ -189,6 +215,7 @@ const getImage = (description) => {
     case "patchy rain nearby":
     case "patchy light rain":
     case "light rain":
+    case "light rain shower":
     case "moderate rain":
       return "rain.svg";
     case "patchy snow nearby":
@@ -204,9 +231,9 @@ const getImage = (description) => {
 const markup = () => {
   const { city, temperature, description, localtime, isDay } = store;
 
-  if (isDay) {
-    leftBlock.classList.add("is-day");
-  }
+  isDay
+    ? leftBlock.classList.add("is-day")
+    : leftBlock.classList.remove("is-day");
 
   return `<div class="left__weather">
               <img
@@ -246,46 +273,52 @@ const renderProperties = () => {
 
 const renderComponent = () => {
   weatherElement.innerHTML = markup();
-
   propertiesElement.innerHTML = renderProperties();
 };
 
-const handleFocus = () => {
+const showError = (message) => {
+  weatherElement.innerHTML = `<div class="error">${message}</div>`;
+};
+
+const handleFocus = (event) => {
   event.target.placeholder = "";
 };
 
-const handleBlur = () => {
-  store.city = inputElement.value;
-  inputElement.placeholder = inputElement.value;
-  inputElement.value = "";
-
-  fetchData();
-};
-
 const handleClick = () => {
-  store.city = inputElement.value;
-  inputElement.placeholder = inputElement.value;
+  const inputValue = inputElement.value.trim();
+
+  if (inputValue.length === 0) {
+    inputElement.value = "";
+    inputElement.placeholder = store.city;
+    return;
+  }
+
+  localStorage.city = inputValue;
+  inputElement.placeholder = inputValue;
   inputElement.value = "";
 
   fetchData();
 };
 
-const handleForecastClick = () => {
-  if (event.target.classList.contains("tomorrow")) {
-    fetchTomorrowData();
-    event.target.classList.add("active");
-    event.target.previousElementSibling.classList.remove("active");
+const handleKeyDown = (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    event.currentTarget.blur();
+    handleClick();
   }
+};
 
-  if (event.target.classList.contains("today")) {
-    fetchData();
-    event.target.classList.add("active");
-    event.target.nextElementSibling.classList.remove("active");
+const handleForecastClick = (event) => {
+  if (event.target.classList.contains("tomorrow")) {
+    fetchData(event.target);
+    return;
   }
+  fetchData();
 };
 
 inputElement.addEventListener("focus", handleFocus);
-inputElement.addEventListener("blur", handleBlur);
+inputElement.addEventListener("blur", handleClick);
+inputElement.addEventListener("keydown", handleKeyDown);
 searchButtonElement.addEventListener("click", handleClick);
 forecastElement.addEventListener("click", handleForecastClick);
 
